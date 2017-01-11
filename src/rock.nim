@@ -1,4 +1,4 @@
-# shot.nim
+# rock.nim
 # Copyright (c) 2017 Vladar
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,7 +20,6 @@
 # THE SOFTWARE.
 #
 # Vladar vladar4@gmail.com
-
 
 import
   math, random,
@@ -49,16 +48,19 @@ type
     newRocks*: seq[Rock]
 
 const
-  RockPolyRadius = [32.0, 12.0, 4.0]
-  RockPolyRandom = [16.0, 6.0, 2.0]
-  RockPolyDotCount = [12, 8, 6]
-  RockVel = [25.0, 50.0, 100.0]
   RockRotVel = 30.0
-  RockColor: Color = 0x909090FF'u32
+  RockFillColor: Color = 0x909090FF'u32
+  # ==================================
+  # FOR ROCK SIZE :  0     1      2
+  # ==================================
+  RockPolyRadius = [32.0, 12.0,   4.0]
+  RockPolyRandom = [12.0,  4.0,   1.0]
+  RockPolyDotCount = [12,  8,     6]
+  RockVel =        [25.0, 50.0, 100.0]
 
 
 var
-  gameDim: Coord = (0.0, 0.0)
+  gameSize: Coord = (0.0, 0.0)
 
 
 proc drawRock*(graphic: ProcGraphic,
@@ -71,10 +73,12 @@ proc drawRock*(graphic: ProcGraphic,
   let rock = RockGraphic(graphic)
   if rock.poly == nil:
     return
+  # modify points
   var coords: seq[Coord] = @[]
   for i in rock.poly:
     coords.add(rotate(i, pos - center, angle) * scale)
-  discard polygon(coords, RockColor, DrawMode.filled)
+  # draw
+  discard polygon(coords, RockFillColor, DrawMode.filled)
 
 
 proc newRockGraphic(): RockGraphic =
@@ -85,15 +89,17 @@ proc newRockGraphic(): RockGraphic =
 proc init*(rock: Rock, size: range[0..2] = 0, pos: Coord = (0.0, 0.0)) =
   rock.initEntity()
 
-  if gameDim == (0.0, 0.0):
-    gameDim = game.size.Coord / game.scale
+  # get game window size once
+  if gameSize == (0.0, 0.0):
+    gameSize = game.size.Coord / game.scale
 
   rock.tags.add("rock")
   rock.size = size
   rock.dim = (RockPolyRadius[rock.size], RockPolyRadius[rock.size])
   rock.newRocks = @[]
-
   rock.graphic = newRockGraphic()
+
+  # generate random polygon points
   RockGraphic(rock.graphic).poly = @[]
   for i in 0..(RockPolyDotCount[size] - 1):
     let
@@ -105,8 +111,11 @@ proc init*(rock: Rock, size: range[0..2] = 0, pos: Coord = (0.0, 0.0)) =
       y = radius * sin(a) +
         random(RockPolyRandom[size]) - RockPolyRandom[size] / 2
     RockGraphic(rock.graphic).poly.add((x, y))
+
   rock.collider = newPolyCollider(rock, (0, 0), RockGraphic(rock.graphic).poly)
   rock.physics = new Physics
+
+  # set position
   if pos == (0.0, 0.0):
     let dim: Coord = (game.size.w div game.scale.x.int,
                       game.size.h div game.scale.y.int)
@@ -126,6 +135,8 @@ proc init*(rock: Rock, size: range[0..2] = 0, pos: Coord = (0.0, 0.0)) =
     else: discard
   else:
     rock.pos = pos
+
+  # set speed
   let spd = RockVel[size] / 2
   rock.vel = (random(spd) + spd, random(spd) + spd)
   rock.rotVel = random([-1.0, 1.0]) * random(RockRotVel / 2) + RockRotVel / 2
@@ -141,14 +152,14 @@ method update*(rock: Rock, elapsed: float) =
 
   # X limits
   if rock.pos.x < -rock.dim.x:
-    rock.pos.x = gameDim.x + rock.dim.x
-  elif rock.pos.x > gameDim.x + rock.dim.x:
+    rock.pos.x = gameSize.x + rock.dim.x
+  elif rock.pos.x > gameSize.x + rock.dim.x:
     rock.pos.x = -rock.dim.x
 
   # Y limits
   if rock.pos.y < -rock.dim.y:
-    rock.pos.y = gameDim.y + rock.dim.y
-  elif rock.pos.y > gameDim.y + rock.dim.y:
+    rock.pos.y = gameSize.y + rock.dim.y
+  elif rock.pos.y > gameSize.y + rock.dim.y:
     rock.pos.y = -rock.dim.y
 
 

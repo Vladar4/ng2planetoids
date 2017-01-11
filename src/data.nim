@@ -34,6 +34,7 @@ var
   gfxData*: Assets[TextureGraphic]
   sfxData*: Assets[Sound]
 
+
 proc loadData*() =
   fntData = newAssets[BitmapFont]("data/fnt",
     proc(file: string): BitmapFont = newBitmapFont(file, (8, 16)))

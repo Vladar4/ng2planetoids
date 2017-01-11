@@ -70,7 +70,7 @@ proc init*(scn: ScnTitle) =
   infoText.scale = 0.5
   infoText.pos = (8 / game.scale.x, (game.size.h.float - 20) / game.scale.y)
 
-  # Add to scene
+  # add to scene
   scn.add(titleText)
   scn.add(infoText)
 
@@ -80,9 +80,9 @@ method event*(scn: ScnTitle, event: Event) =
     case event.key.keysym.scancode:
       of ScancodeEscape:
         gameRunning = false
-      of ScancodeF11:
+      of ScancodeF11: # show info
         showInfo = not showInfo
-      else:
+      else: # switch to the main scene
         game.scene = mainScene
   elif event.kind == MouseButtonDown:
     game.scene = mainScene
@@ -99,5 +99,4 @@ method show*(scn: ScnTitle) =
 
 method update*(scn: ScnTitle, elapsed: float) =
   scn.updateScene(elapsed)
-
 

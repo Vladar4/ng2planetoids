@@ -36,4 +36,5 @@ if game.init(w = 1280, h = 720, title = "Nimgame 2 Planetoids"):
   mainScene = newScnMain()
   game.scene = titleScene
   game.run()
+  freeData()
 

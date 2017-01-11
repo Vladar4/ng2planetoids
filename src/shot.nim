@@ -21,7 +21,6 @@
 #
 # Vladar vladar4@gmail.com
 
-
 import
   nimgame2 / [
     assets,
@@ -42,8 +41,9 @@ type
 
 
 const
-  ShotRad = 1.0
-  ShotSpeed = (0.0, -100.0)
+  ShotColor = 0xFF0000FF'u32
+  ShotRad = 1.0 # shot radius
+  ShotSpeed = (0.0, -100.0) # shot speed for the 0 degrees direction
 
 
 proc drawShot*(graphic: ProcGraphic,
@@ -53,7 +53,7 @@ proc drawShot*(graphic: ProcGraphic,
                center: Coord,
                flip: Flip,
                region: Rect) =
-  discard circle(pos, ShotRad, 0xFF0000FF'u32, DrawMode.filled)
+  discard circle(pos, ShotRad, ShotColor, DrawMode.filled)
 
 
 proc init*(shot: Shot, pos: Coord, angle: Angle) =
@@ -74,6 +74,7 @@ proc newShot*(pos: Coord, angle: Angle): Shot =
 
 method update*(shot: Shot, elapsed: float) =
   shot.updateEntity(elapsed)
+  # check screen limits
   if shot.pos.x < - ShotRad or
      shot.pos.x > game.size.w.float / game.scale.x + ShotRad or
      shot.pos.y < - ShotRad or

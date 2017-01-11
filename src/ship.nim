@@ -21,7 +21,6 @@
 #
 # Vladar vladar4@gmail.com
 
-
 import
   nimgame2 / [
     assets,
@@ -38,20 +37,18 @@ import
 
 type
   Ship* = ref object of Entity
-    engines: bool
+    engines: bool # engines activity flag
 
 
 const
-  Acceleration = (0.0, -50.0)
-  Drag = (10.0, 10.0)
-  EngineLines = [[(-4.0, 8.0), (-3.0, 8.0)], [(3.0, 8.0), (4.0, 8.0)]]
-
-
-proc free*(ship: Ship) =
-  discard
+  Acceleration = (0.0, -50.0) # default acceleration for the 0 degree position
+  Drag = (10.0, 10.0) # drag value
+  EngineLines = [[(-4.0, 8.0), (-3.0, 8.0)], [(3.0, 8.0), (4.0, 8.0)]] # \
+    # line coordinates for the engines
 
 
 proc reset*(ship: Ship) =
+  # reset ship's position to the center of the screen
   ship.pos.x = game.size.w / 2 / game.scale.x
   ship.pos.y = game.size.h / 2 / game.scale.y
 
@@ -69,12 +66,13 @@ proc init*(ship: Ship) =
 
 
 proc newShip*(): Ship =
-  new result, free
+  new result
   result.init()
 
 
 method render*(ship: Ship) =
   ship.renderEntity()
+  # draw engines
   if ship.engines:
     for l in EngineLines:
       var line = [
@@ -86,10 +84,10 @@ method render*(ship: Ship) =
 method update*(ship: Ship, elapsed: float) =
   ship.updateEntity(elapsed)
 
-  # Rotation
+  # rotation
   ship.rot = direction(ship.pos, (mouse.abs / game.scale))
 
-  # Acceleration
+  # acceleration
   if Button.right.pressed:
     ship.acc = rotate(Acceleration, ship.rot)
     ship.engines = true

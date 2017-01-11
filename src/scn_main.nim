@@ -38,36 +38,34 @@ import
 type
   ScnMain* = ref object of Scene
     ship: Ship
-    cooldown: float
+    cooldown: float # shooting cooldown (in seconds)
 
 
 const
-  Cooldown = 1.0
+  Cooldown = 0.5  # shooting cooldown value (in seconds)
 
 
 var
   mainScene*: ScnMain
 
 
-proc free*(scn: ScnMain) =
-  freeData()
-
-
 proc init*(scn: ScnMain) =
   Scene(scn).init()
+
+  # infoText
   let
     infoText = newEntity()
     infoTextG = newTextGraphic(fntData["default8x16"])
-
   infoTextG.lines = ["Nimgame 2 Planetoids v1.0"]
   infoText.graphic = infoTextG
   infoText.scale = 0.5
   infoText.pos = (8 / game.scale.x, (game.size.h.float - 20) / game.scale.y)
   infoText.layer = 10
 
+  # ship
   scn.ship = newShip()
 
-  # Add to scene
+  # add to scene
   scn.add(scn.ship)
   for i in 0..3:
     scn.add(newRock(0))
@@ -75,7 +73,7 @@ proc init*(scn: ScnMain) =
 
 
 proc newScnMain*(): ScnMain =
-  new result, free
+  new result
   result.init()
 
 
@@ -84,9 +82,9 @@ method event*(scn: ScnMain, event: Event) =
     case event.key.keysym.scancode:
       of ScancodeEscape:
         gameRunning = false
-      of ScancodeF10:
+      of ScancodeF10: # toggle outlines
         colliderOutline = not colliderOutline
-      of ScancodeF11:
+      of ScancodeF11: # toggle info
         showInfo = not showInfo
       else: discard
 
