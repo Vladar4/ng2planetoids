@@ -23,6 +23,7 @@
 
 import
   nimgame2 / [
+    input,
     nimgame,
     settings],
   data, scn_title, scn_main

@@ -37,11 +37,13 @@ import
 
 type
   ScnMain* = ref object of Scene
+    status: Entity
     ship: Ship
     cooldown: float # shooting cooldown (in seconds)
 
 
 const
+  LayerGUI = 10
   Cooldown = 0.5  # shooting cooldown value (in seconds)
 
 
@@ -52,24 +54,34 @@ var
 proc init*(scn: ScnMain) =
   Scene(scn).init()
 
-  # infoText
+  # info
   let
-    infoText = newEntity()
-    infoTextG = newTextGraphic(fntData["default8x16"])
-  infoTextG.lines = ["Nimgame 2 Planetoids v1.0"]
-  infoText.graphic = infoTextG
-  infoText.scale = 0.5
-  infoText.pos = (8 / game.scale.x, (game.size.h.float - 20) / game.scale.y)
-  infoText.layer = 10
+    info = newEntity()
+    infoText = newTextGraphic(fntData["default8x16"])
+  infoText.lines = ["Nimgame 2 Planetoids v1.0"]
+  info.graphic = infoText
+  info.scale = 0.5
+  info.pos = (8 / game.scale.x, (game.size.h.float - 20) / game.scale.y)
+  info.layer = LayerGUI
+
+  # status
+  let
+    statusText = newTextGraphic(fntData["default8x16"])
+  scn.status = newEntity()
+  scn.status.graphic = statusText
+  scn.status.pos = (8 / game.scale.x, 8 / game.scale.y)
+  info.layer = LayerGUI
+
 
   # ship
   scn.ship = newShip()
 
   # add to scene
+  scn.add(info)
+  scn.add(scn.status)
   scn.add(scn.ship)
   for i in 0..3:
     scn.add(newRock(0))
-  scn.add(infoText)
 
 
 proc newScnMain*(): ScnMain =
@@ -91,24 +103,36 @@ method event*(scn: ScnMain, event: Event) =
 
 method show*(scn: ScnMain) =
   scn.cooldown = Cooldown
+  score = 0
 
 
 method update*(scn: ScnMain, elapsed: float) =
   scn.updateScene(elapsed)
+
   # Shooting cooldown
   if scn.cooldown != 0:
     scn.cooldown -= elapsed
     if scn.cooldown < 0:
       scn.cooldown = 0
+
   # Shooting
   if Button.left.pressed and scn.cooldown == 0:
     let shot = newShot(scn.ship.pos, scn.ship.rot)
     scn.add(shot)
     scn.cooldown = Cooldown
+
   # New rocks
   for entity in scn.entities:
     if "rock" in entity.tags:
       let rock = Rock(entity)
       while rock.newRocks.len > 0:
         scn.add(rock.newRocks.pop())
+
+  # No more rocks
+  if "rock" notin scn:
+    for i in 0..3:
+      scn.add(newRock(0))
+
+  # Update status
+  TextGraphic(scn.status.graphic).lines = ["" & $score]
 

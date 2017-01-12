@@ -33,6 +33,7 @@ var
   fntData*: Assets[BitmapFont]
   gfxData*: Assets[TextureGraphic]
   sfxData*: Assets[Sound]
+  score*: int
 
 
 proc loadData*() =

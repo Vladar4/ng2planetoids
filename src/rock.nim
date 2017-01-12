@@ -50,13 +50,14 @@ type
 const
   RockRotVel = 30.0
   RockFillColor: Color = 0x909090FF'u32
-  # ==================================
-  # FOR ROCK SIZE :  0     1      2
-  # ==================================
-  RockPolyRadius = [32.0, 12.0,   4.0]
-  RockPolyRandom = [12.0,  4.0,   1.0]
-  RockPolyDotCount = [12,  8,     6]
-  RockVel =        [25.0, 50.0, 100.0]
+  # ===================================
+  # FOR ROCK SIZE :   0     1      2
+  # ===================================
+  RockPolyRadius =  [32.0, 12.0,   4.0]
+  RockPolyRandom =  [12.0,  4.0,   1.0]
+  RockPolyDotCount =[12,  8,     6]
+  RockVel =         [25.0, 50.0, 100.0]
+  RockScore =       [10,   40,   200]
 
 
 var
@@ -169,6 +170,7 @@ method update*(physics: Physics, rock: Rock, elapsed: float) =
 
 proc shatter*(rock: Rock, angle: Angle) =
   rock.dead = true
+  score += RockScore[rock.size]
   case rock.size:
   of 0:
     let rockA = newRock(1, rock.pos)
