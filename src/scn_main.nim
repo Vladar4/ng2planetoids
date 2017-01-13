@@ -104,6 +104,7 @@ method event*(scn: ScnMain, event: Event) =
 method show*(scn: ScnMain) =
   scn.cooldown = Cooldown
   score = 0
+  lives = 4
 
 
 method update*(scn: ScnMain, elapsed: float) =
@@ -114,12 +115,6 @@ method update*(scn: ScnMain, elapsed: float) =
     scn.cooldown -= elapsed
     if scn.cooldown < 0:
       scn.cooldown = 0
-
-  # Shooting
-  if Button.left.pressed and scn.cooldown == 0:
-    let shot = newShot(scn.ship.pos, scn.ship.rot)
-    scn.add(shot)
-    scn.cooldown = Cooldown
 
   # New rocks
   for entity in scn.entities:
@@ -133,6 +128,30 @@ method update*(scn: ScnMain, elapsed: float) =
     for i in 0..3:
       scn.add(newRock(0))
 
+  # Ship is dead
+  if scn.ship.dead:
+    if lives > 0:
+      # Respawn
+      if Button.left.pressed:
+        dec lives
+        scn.ship.dead = false
+        scn.ship.reset()
+        scn.cooldown = Cooldown
+        scn.add(scn.ship)
+    else:
+      #TODO GAME OVER
+      discard
+  # Ship controls
+  else:
+    # Shooting
+    if Button.left.pressed and scn.cooldown == 0:
+      let shot = newShot(scn.ship.pos, scn.ship.rot)
+      scn.add(shot)
+      scn.cooldown = Cooldown
+
+
   # Update status
-  TextGraphic(scn.status.graphic).lines = ["" & $score]
+  TextGraphic(scn.status.graphic).lines = [
+    "" & $score,
+    "" & $lives & " LIVES"]
 

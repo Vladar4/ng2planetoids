@@ -51,6 +51,8 @@ proc reset*(ship: Ship) =
   # reset ship's position to the center of the screen
   ship.pos.x = game.size.w / 2 / game.scale.x
   ship.pos.y = game.size.h / 2 / game.scale.y
+  ship.vel = (0.0, 0.0)
+  ship.acc = (0.0, 0.0)
 
 
 proc init*(ship: Ship) =
@@ -114,4 +116,9 @@ method update*(physics: Physics, ship: Ship, elapsed: float) =
     ship.pos.y = gameDim.y + shipDim.y
   elif ship.pos.y > gameDim.y + shipDim.y:
     ship.pos.y = -shipDim.y
+
+
+method onCollide*(ship: Ship, target: Entity) =
+  if "rock" in target.tags:
+    ship.dead = true
 
