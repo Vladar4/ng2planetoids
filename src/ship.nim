@@ -121,4 +121,5 @@ method update*(physics: Physics, ship: Ship, elapsed: float) =
 method onCollide*(ship: Ship, target: Entity) =
   if "rock" in target.tags:
     ship.dead = true
+    justDied = true
 

@@ -26,7 +26,8 @@ import
     assets,
     audio,
     bitmapfont,
-    texturegraphic]
+    texturegraphic,
+    types]
 
 
 var
@@ -34,6 +35,8 @@ var
   gfxData*: Assets[TextureGraphic]
   sfxData*: Assets[Sound]
   score*, lives*: int
+  justDied*: bool
+  explosions*: seq[Coord]
 
 
 proc loadData*() =

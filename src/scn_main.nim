@@ -31,18 +31,20 @@ import
     scene,
     settings,
     textgraphic,
-    types],
+    types,
+    utils],
   data, rock, ship, shot
 
 
 type
   ScnMain* = ref object of Scene
-    status: Entity
+    crash, status: Entity
     ship: Ship
     cooldown: float # shooting cooldown (in seconds)
 
 
 const
+  LayerEffects = 5
   LayerGUI = 10
   Cooldown = 0.5  # shooting cooldown value (in seconds)
 
@@ -71,6 +73,14 @@ proc init*(scn: ScnMain) =
   scn.status.graphic = statusText
   scn.status.pos = (8 / game.scale.x, 8 / game.scale.y)
   info.layer = LayerGUI
+
+  # crash
+  scn.crash = newEntity()
+  scn.crash.layer = LayerEffects
+  scn.crash.graphic = gfxData["crash"]
+  scn.crash.initSprite((24, 34))
+  scn.crash.centrify()
+  discard scn.crash.addAnimation("crash", (0..7).toSeq, 0.05)
 
 
   # ship
@@ -105,6 +115,7 @@ method show*(scn: ScnMain) =
   scn.cooldown = Cooldown
   score = 0
   lives = 4
+  explosions = @[]
 
 
 method update*(scn: ScnMain, elapsed: float) =
@@ -123,10 +134,32 @@ method update*(scn: ScnMain, elapsed: float) =
       while rock.newRocks.len > 0:
         scn.add(rock.newRocks.pop())
 
+  while explosions.len > 0:
+    # add explosion
+    let
+      explosion = explosions.pop()
+      expl = newEntity()
+    expl.layer = LayerEffects
+    expl.graphic = gfxData["explosion"]
+    expl.initSprite((56, 48))
+    expl.centrify()
+    discard expl.addAnimation("expl", (0..25).toSeq, 0.05)
+    expl.pos = explosion
+    expl.play("expl", 1, kill = true)
+    scn.add(expl)
+
   # No more rocks
   if "rock" notin scn:
     for i in 0..3:
       scn.add(newRock(0))
+
+  if justDied:
+    justDied = false
+    # Crash
+    scn.crash.dead = false
+    scn.add(scn.crash)
+    scn.crash.pos = scn.ship.pos
+    scn.crash.play("crash", 1, kill = true)
 
   # Ship is dead
   if scn.ship.dead:

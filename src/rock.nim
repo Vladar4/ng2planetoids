@@ -171,6 +171,7 @@ method update*(physics: Physics, rock: Rock, elapsed: float) =
 proc shatter*(rock: Rock, angle: Angle) =
   rock.dead = true
   score += RockScore[rock.size]
+  explosions.add(rock.pos)
   case rock.size:
   of 0:
     let rockA = newRock(1, rock.pos)
