@@ -26,6 +26,7 @@ import
     assets,
     entity,
     font,
+    graphic,
     input,
     nimgame,
     scene,
@@ -37,10 +38,7 @@ import
 
 type
   ScnTitle* = ref object of Scene
-
-
-var
-  titleScene*: ScnTitle
+    scoreboard: Entity
 
 
 proc free*(scn: ScnTitle) =
@@ -54,6 +52,7 @@ proc init*(scn: ScnTitle) =
     titleTextG = newTextGraphic(fntData["default8x16"])
     infoText = newEntity()
     infoTextG = newTextGraphic(fntData["default8x16"])
+    scoreG = newTextGraphic(fntData["default8x16"])
 
   titleTextG.lines = [" Nimgame 2 Planetoids ",
                       "______________________",
@@ -70,9 +69,14 @@ proc init*(scn: ScnTitle) =
   infoText.scale = 0.5
   infoText.pos = (8 / game.scale.x, (game.size.h.float - 20) / game.scale.y)
 
+  scn.scoreboard = newEntity()
+  scn.scoreboard.graphic = scoreG
+  scn.scoreboard.pos = (game.size.w / 2 / game.scale.x, 200.0)
+
   # add to scene
   scn.add(titleText)
   scn.add(infoText)
+  scn.add(scn.scoreboard)
 
 
 method event*(scn: ScnTitle, event: Event) =
@@ -94,7 +98,19 @@ proc newScnTitle*(): ScnTitle =
 
 
 method show*(scn: ScnTitle) =
-  discard
+  initHiscores()
+  TextGraphic(scn.scoreboard.graphic).lines = [
+    hiscores[0].name.toString & " " & $hiscores[0].score,
+    hiscores[1].name.toString & " " & $hiscores[1].score,
+    hiscores[2].name.toString & " " & $hiscores[2].score,
+    hiscores[3].name.toString & " " & $hiscores[3].score,
+    hiscores[4].name.toString & " " & $hiscores[4].score,
+    hiscores[5].name.toString & " " & $hiscores[5].score,
+    hiscores[6].name.toString & " " & $hiscores[6].score,
+    hiscores[7].name.toString & " " & $hiscores[7].score,
+    hiscores[8].name.toString & " " & $hiscores[8].score,
+    hiscores[9].name.toString & " " & $hiscores[9].score]
+  scn.scoreboard.centrify()
 
 
 method update*(scn: ScnTitle, elapsed: float) =

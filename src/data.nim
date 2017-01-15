@@ -26,14 +26,28 @@ import
     assets,
     audio,
     bitmapfont,
+    scene,
     texturegraphic,
     types]
 
 
+const
+  NameLimit = 32
+
+
+type
+  Name* = array[NameLimit, char]
+  Hiscore* = object
+    name*: Name
+    score*: uint
+
+
 var
+  titleScene*, mainScene*: Scene
   fntData*: Assets[BitmapFont]
   gfxData*: Assets[TextureGraphic]
   sfxData*: Assets[Sound]
+  hiscores*: array[10, Hiscore]
   score*, lives*: int
   justDied*: bool
   explosions*: seq[Coord]
@@ -55,4 +69,71 @@ proc freeData*() =
     gfx.free()
   for sfx in sfxData.values:
     sfx.free()
+
+
+proc toName*(str: string): Name =
+  let lim = if str.high < NameLimit: str.high else: NameLimit - 1
+  for i in 0..lim:
+    result[i] = str[i]
+
+
+proc toString*(name: Name): string =
+  result = ""
+  for c in name:
+    result.add(c)
+
+
+proc initHiscores*() =
+  var
+    f: File
+    line: Hiscore
+  let
+    size = sizeof(line)
+
+  if f.open("hiscores.dat", fmRead, size):
+    # Read existing hiscores
+    var i = 0
+    while f.readBuffer(addr(line), size) == size:
+      hiscores[i] = line
+      inc i
+
+  else:
+    # Fill a new hiscores file
+    discard f.open("hiscores.dat", fmWrite, size)
+    for i in 0..9:
+      line.name = toName("none")
+      line.score = 0
+      discard f.writeBuffer(addr(line), size)
+
+  f.close()
+
+
+proc writeHiscores*() =
+  var
+    f: File
+    line: Hiscore
+  let
+    size = sizeof(line)
+
+  discard f.open("hiscores.dat", fmWrite, size)
+  for i in 0..9:
+    line = hiscores[i]
+    discard f.writeBuffer(addr(line), size)
+
+  f.close()
+
+
+proc shiftScores(idx: int) =
+  for i in idx..8:
+    hiscores[i+1] = hiscores[i]
+
+
+proc checkForHiscore*(newScore: uint) =
+  for i in 0..9:
+    if newScore > hiscores[i].score:
+      shiftScores(i)
+      hiscores[i].score = newScore
+      break
+
+  writeHiscores()
 

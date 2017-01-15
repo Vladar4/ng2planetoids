@@ -50,10 +50,6 @@ const
   Cooldown = 0.5  # shooting cooldown value (in seconds)
 
 
-var
-  mainScene*: ScnMain
-
-
 proc init*(scn: ScnMain) =
   Scene(scn).init()
 
@@ -173,8 +169,8 @@ method update*(scn: ScnMain, elapsed: float) =
         scn.cooldown = Cooldown
         scn.add(scn.ship)
     else:
-      #TODO GAME OVER
-      discard
+      checkForHiscore(uint(score))
+      game.scene = titleScene
   # Ship controls
   else:
     # Shooting
