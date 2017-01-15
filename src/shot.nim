@@ -43,7 +43,7 @@ type
 const
   ShotColor = 0xFF0000FF'u32
   ShotRad = 1.0 # shot radius
-  ShotSpeed = (0.0, -100.0) # shot speed for the 0 degrees direction
+  ShotSpeed = (0.0, -150.0) # shot speed for the 0 degrees direction
 
 
 proc drawShot*(graphic: ProcGraphic,

@@ -26,6 +26,7 @@ import
   sdl2/sdl,
   nimgame2 / [
     assets,
+    audio,
     collider,
     draw,
     entity,
@@ -172,6 +173,7 @@ proc shatter*(rock: Rock, angle: Angle) =
   rock.dead = true
   score += RockScore[rock.size]
   explosions.add(rock.pos)
+  discard sfxData["explosion"].play()
   case rock.size:
   of 0:
     let rockA = newRock(1, rock.pos)

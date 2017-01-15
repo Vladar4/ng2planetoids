@@ -24,6 +24,7 @@
 import
   nimgame2 / [
     assets,
+    audio,
     collider,
     draw,
     entity,
@@ -122,4 +123,5 @@ method onCollide*(ship: Ship, target: Entity) =
   if "rock" in target.tags:
     ship.dead = true
     justDied = true
+    discard sfxData["explosion"].play()
 

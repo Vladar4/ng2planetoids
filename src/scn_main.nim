@@ -24,6 +24,7 @@
 import
   nimgame2 / [
     assets,
+    audio,
     entity,
     font,
     input,
@@ -72,7 +73,7 @@ proc init*(scn: ScnMain) =
   scn.status = newEntity()
   scn.status.graphic = statusText
   scn.status.pos = (8 / game.scale.x, 8 / game.scale.y)
-  info.layer = LayerGUI
+  scn.status.layer = LayerGUI
 
   # crash
   scn.crash = newEntity()
@@ -181,6 +182,7 @@ method update*(scn: ScnMain, elapsed: float) =
       let shot = newShot(scn.ship.pos, scn.ship.rot)
       scn.add(shot)
       scn.cooldown = Cooldown
+      discard sfxData["shot"].play()
 
 
   # Update status
