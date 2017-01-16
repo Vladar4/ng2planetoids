@@ -40,7 +40,7 @@ type
   Name* = array[NameLimit, char]
   Hiscore* = object
     name*: Name
-    score*: uint
+    score*: uint64
 
 
 var
