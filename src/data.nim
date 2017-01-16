@@ -124,16 +124,16 @@ proc writeHiscores*() =
 
 
 proc shiftScores(idx: int) =
-  for i in idx..8:
-    hiscores[i+1] = hiscores[i]
+  for i in countdown(9, idx + 1):
+    hiscores[i] = hiscores[i-1]
 
 
-proc checkForHiscore*(newScore: uint) =
+proc checkForHiscore*(newScore: uint): int =
+  result = -1
   for i in 0..9:
     if newScore > hiscores[i].score:
       shiftScores(i)
       hiscores[i].score = newScore
+      result = i
       break
-
-  writeHiscores()
 

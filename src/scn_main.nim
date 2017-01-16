@@ -39,7 +39,7 @@ import
 
 type
   ScnMain* = ref object of Scene
-    crash, status: Entity
+    crash, status, input: Entity
     ship: Ship
     cooldown: float # shooting cooldown (in seconds)
 
@@ -48,6 +48,10 @@ const
   LayerEffects = 5
   LayerGUI = 10
   Cooldown = 0.5  # shooting cooldown value (in seconds)
+
+
+var
+  hiscoreIdx: int
 
 
 proc init*(scn: ScnMain) =
@@ -70,6 +74,17 @@ proc init*(scn: ScnMain) =
   scn.status.graphic = statusText
   scn.status.pos = (8 / game.scale.x, 8 / game.scale.y)
   scn.status.layer = LayerGUI
+
+  # input
+  let
+    inputText = newTextGraphic(fntData["default8x16"])
+  scn.input = newEntity()
+  scn.input.graphic = inputText
+  inputText.lines = ["ENTER YOUR NAME", ""]
+  scn.input.centrify()
+  scn.input.pos = (game.size.w / 2 / game.scale.x,
+                   game.size.h / 2 / game.scale.y)
+  scn.input.layer = LayerGUI
 
   # crash
   scn.crash = newEntity()
@@ -113,10 +128,50 @@ method show*(scn: ScnMain) =
   score = 0
   lives = 4
   explosions = @[]
+  hiscoreIdx = -1
+  scn.del("rock")
 
 
 method update*(scn: ScnMain, elapsed: float) =
   scn.updateScene(elapsed)
+
+  # Entering name
+  if scn.input in scn:
+    let text = TextGraphic(scn.input.graphic)
+    # Input
+    if text.lines[1].len < 32:
+      # Letters
+      for key in ScancodeA..ScancodeZ:
+        if key.pressed:
+          clearPressed(key)
+          var lines = text.lines
+          lines[1].add($chr(ord('A') + (key.int - ScancodeA.int)))
+          text.lines = lines
+          text.update()
+      # Numbers
+      for key in Scancode1..Scancode0:
+        if key.pressed:
+          clearPressed(key)
+          var lines = text.lines
+          lines[1].add($chr(ord('1') + (key.int - Scancode1.int)))
+          text.lines = lines
+          text.update()
+    # Controls
+    if ScancodeBackspace.pressed:
+      clearPressed(ScancodeBackspace)
+      var lines = text.lines
+      lines[1] = lines[1][0..^2]
+      text.lines = lines
+      text.update()
+
+    if ScancodeReturn.pressed:
+      clearPressed(ScancodeReturn)
+      discard scn.del(scn.input)
+      hiscores[hiscoreIdx].name = text.lines[1].toName
+      hiscores[hiscoreIdx].score = score.uint
+      writeHiscores()
+      game.scene = titleScene
+    return
 
   # Shooting cooldown
   if scn.cooldown != 0:
@@ -169,9 +224,14 @@ method update*(scn: ScnMain, elapsed: float) =
         scn.cooldown = Cooldown
         scn.add(scn.ship)
     else:
-      checkForHiscore(uint(score))
+      hiscoreIdx = checkForHiscore(uint(score))
+      if hiscoreIdx >= 0:
+        scn.add(scn.input)
+        return
+
       game.scene = titleScene
-  # Ship controls
+
+  # Ship is alive
   else:
     # Shooting
     if Button.left.pressed and scn.cooldown == 0:
