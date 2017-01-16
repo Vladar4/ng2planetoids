@@ -56,7 +56,7 @@ const
   # ===================================
   RockPolyRadius =  [24.0, 12.0,   6.0]
   RockPolyRandom =  [12.0,  4.0,   1.0]
-  RockPolyDotCount =[12,  8,     6]
+  RockPolyDotCount =[12,    6,     4]
   RockVel =         [50.0, 85.0, 125.0]
   RockScore* =       [10,   40,   200]
 

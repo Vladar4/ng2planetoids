@@ -103,8 +103,6 @@ proc init*(scn: ScnMain) =
   scn.add(info)
   scn.add(scn.status)
   scn.add(scn.ship)
-  for i in 0..3:
-    scn.add(newRock(0))
 
 
 proc newScnMain*(): ScnMain =
@@ -116,7 +114,7 @@ method event*(scn: ScnMain, event: Event) =
   if event.kind == KeyDown:
     case event.key.keysym.scancode:
       of ScancodeEscape:
-        gameRunning = false
+        game.scene = titleScene
       of ScancodeF10: # toggle outlines
         colliderOutline = not colliderOutline
       of ScancodeF11: # toggle info
@@ -132,6 +130,8 @@ method show*(scn: ScnMain) =
   explosions = @[]
   hiscoreIdx = -1
   scn.del("rock")
+  for i in 0..3:
+    scn.add(newRock(0))
 
 
 method update*(scn: ScnMain, elapsed: float) =
