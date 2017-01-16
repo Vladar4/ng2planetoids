@@ -48,6 +48,7 @@ const
   LayerEffects = 5
   LayerGUI = 10
   Cooldown = 0.5  # shooting cooldown value (in seconds)
+  RockWaveScore = RockScore[0] + 2 * RockScore[1] + 4 * RockScore[2]
 
 
 var
@@ -127,6 +128,7 @@ method show*(scn: ScnMain) =
   scn.cooldown = Cooldown
   score = 0
   lives = 4
+  justDied = false
   explosions = @[]
   hiscoreIdx = -1
   scn.del("rock")
@@ -202,7 +204,7 @@ method update*(scn: ScnMain, elapsed: float) =
 
   # No more rocks
   if "rock" notin scn:
-    for i in 0..3:
+    for i in 0..(2 + score div (2 * RockWaveScore)):
       scn.add(newRock(0))
 
   if justDied:
@@ -213,16 +215,23 @@ method update*(scn: ScnMain, elapsed: float) =
     scn.crash.pos = scn.ship.pos
     scn.crash.play("crash", 1, kill = true)
 
+  # Respawn cooldown
+  if respawnCooldown > 0:
+    respawnCooldown -= elapsed
+    if respawnCooldown < 0:
+      respawnCooldown = 0
+
   # Ship is dead
   if scn.ship.dead:
     if lives > 0:
       # Respawn
-      if Button.left.pressed:
+      if Button.left.pressed and respawnCooldown <= 0:
         dec lives
         scn.ship.dead = false
         scn.ship.reset()
         scn.cooldown = Cooldown
         scn.add(scn.ship)
+    # No more lives left
     else:
       hiscoreIdx = checkForHiscore(uint(score))
       if hiscoreIdx >= 0:

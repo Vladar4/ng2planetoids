@@ -42,7 +42,7 @@ type
 
 
 const
-  Acceleration = (0.0, -50.0) # default acceleration for the 0 degree position
+  Acceleration = (0.0, -100.0) # default acceleration for the 0 degree position
   Drag = (10.0, 10.0) # drag value
   EngineLines = [[(-4.0, 8.0), (-3.0, 8.0)], [(3.0, 8.0), (4.0, 8.0)]] # \
     # line coordinates for the engines
@@ -123,5 +123,6 @@ method onCollide*(ship: Ship, target: Entity) =
   if "rock" in target.tags:
     ship.dead = true
     justDied = true
+    respawnCooldown = RespawnCooldown
     discard sfxData["explosion"].play()
 

@@ -33,6 +33,7 @@ import
 
 const
   NameLimit = 32
+  RespawnCooldown* = 1.0
 
 
 type
@@ -51,6 +52,7 @@ var
   score*, lives*: int
   justDied*: bool
   explosions*: seq[Coord]
+  respawnCooldown*: float
 
 
 proc loadData*() =
@@ -73,6 +75,8 @@ proc freeData*() =
 
 proc toName*(str: string): Name =
   let lim = if str.high < NameLimit: str.high else: NameLimit - 1
+  for i in 0..(NameLimit - 1):
+    result[i] = ' '
   for i in 0..lim:
     result[i] = str[i]
 

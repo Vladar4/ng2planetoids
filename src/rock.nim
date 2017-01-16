@@ -54,11 +54,11 @@ const
   # ===================================
   # FOR ROCK SIZE :   0     1      2
   # ===================================
-  RockPolyRadius =  [32.0, 12.0,   4.0]
+  RockPolyRadius =  [24.0, 12.0,   6.0]
   RockPolyRandom =  [12.0,  4.0,   1.0]
   RockPolyDotCount =[12,  8,     6]
-  RockVel =         [25.0, 50.0, 100.0]
-  RockScore =       [10,   40,   200]
+  RockVel =         [50.0, 85.0, 125.0]
+  RockScore* =       [10,   40,   200]
 
 
 var
