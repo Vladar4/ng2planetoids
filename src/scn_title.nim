@@ -71,7 +71,7 @@ proc init*(scn: ScnTitle) =
 
   scn.scoreboard = newEntity()
   scn.scoreboard.graphic = scoreG
-  scn.scoreboard.pos = (game.size.w / 2 / game.scale.x, 200.0)
+  scn.scoreboard.pos = (game.size.w / 2 / game.scale.x, 400.0 / game.scale.y)
 
   # add to scene
   scn.add(titleText)
