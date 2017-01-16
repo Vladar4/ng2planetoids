@@ -1,7 +1,7 @@
 Nimgame 2 Planetoids
 ====================
 
-A demo game for the [nimgame2](https://github.com/Vladar4/nimgame2) engine.
+A demo game for the [Nimgame 2](https://github.com/Vladar4/nimgame2) engine.
 
 Controls:
 ---------
@@ -23,9 +23,9 @@ Links:
 
 [Nim](https://github.com/nim-lang/Nim)
 
-[sdl2_nim](https://github.com/Vladar4/sdl2_nim)
+[SDL2_nim](https://github.com/Vladar4/sdl2_nim)
 
-[Nimgame2](https://github.com/Vladar4/nimgame2)
+[Nimgame 2](https://github.com/Vladar4/nimgame2)
 
 --------
 
