@@ -39,7 +39,7 @@ import
 
 type
   ScnMain* = ref object of Scene
-    crash, status, input: Entity
+    crash, status, input, pause: Entity
     ship: Ship
     cooldown: float # shooting cooldown (in seconds)
 
@@ -87,6 +87,18 @@ proc init*(scn: ScnMain) =
                    game.size.h / 2 / game.scale.y)
   scn.input.layer = LayerGUI
 
+  # pause
+  let
+    pauseText = newTextGraphic(fntData["default8x16"])
+  scn.pause = newEntity()
+  scn.pause.graphic = pauseText
+  pauseText.lines = ["PAUSE"]
+  scn.pause.centrify()
+  scn.pause.pos = (game.size.w / 2 / game.scale.x,
+                   game.size.h / 2 / game.scale.y)
+  scn.pause.layer = LayerGUI
+  scn.pause.visible = false
+
   # crash
   scn.crash = newEntity()
   scn.crash.layer = LayerEffects
@@ -101,6 +113,7 @@ proc init*(scn: ScnMain) =
 
   # add to scene
   scn.add(info)
+  scn.add(scn.pause)
   scn.add(scn.status)
   scn.add(scn.ship)
 
@@ -115,6 +128,9 @@ method event*(scn: ScnMain, event: Event) =
     case event.key.keysym.scancode:
       of ScancodeEscape:
         game.scene = titleScene
+      of ScancodeP: # pause/unpause
+        gamePaused = not gamePaused
+        scn.pause.visible = gamePaused
       of ScancodeF10: # toggle outlines
         colliderOutline = not colliderOutline
       of ScancodeF11: # toggle info
