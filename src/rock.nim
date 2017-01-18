@@ -115,6 +115,7 @@ proc init*(rock: Rock, size: range[0..2] = 0, pos: Coord = (0.0, 0.0)) =
     RockGraphic(rock.graphic).poly.add((x, y))
 
   rock.collider = newPolyCollider(rock, (0, 0), RockGraphic(rock.graphic).poly)
+  rock.collider.tags.add("nil") # do not check collisions "rock - target"
   rock.physics = new Physics
 
   # set position

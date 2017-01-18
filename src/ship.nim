@@ -65,6 +65,7 @@ proc init*(ship: Ship) =
   ship.centrify()
   ship.collider = ship.newPolyCollider(
     (0.0, 0.0), [(0.0, -7.0), (7.0, 7.0), (-7.0, 7.0)])
+  ship.collider.tags.add("rock") # check collisions "ship - rock" only
   ship.reset()
 
 
@@ -77,10 +78,10 @@ method render*(ship: Ship) =
   ship.renderEntity()
   # draw engines
   if ship.engines:
-    for l in EngineLines:
+    for ln in EngineLines:
       var line = [
-        rotate(l[0], ship.pos, ship.rot),
-        rotate(l[1], ship.pos, ship.rot)]
+        rotate(ln[0], ship.pos, ship.rot),
+        rotate(ln[1], ship.pos, ship.rot)]
       discard thickLine(line[0], line[1], game.scale.x, 0xFF0000FF'u32)
 
 

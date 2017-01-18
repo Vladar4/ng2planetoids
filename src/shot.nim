@@ -62,6 +62,7 @@ proc init*(shot: Shot, pos: Coord, angle: Angle) =
   shot.graphic = newProcGraphic()
   shot.physics = new Physics
   shot.collider = shot.newCircleCollider((0, 0), ShotRad)
+  shot.collider.tags.add("rock") # check collisions "shot - rock" only
   ProcGraphic(shot.graphic).procedure = drawShot
   shot.pos = pos + rotate((0.0, - gfxData["ship"].dim.h / 2), angle)
   shot.vel = rotate(ShotSpeed, angle)
