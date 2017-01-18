@@ -11,6 +11,7 @@ Controls:
 | Aim                       | Mouse               |
 | Fly                       | Right mouse button  |
 | Shot                      | Left mouse button   |
+| Pause                     | P                   |
 | Toggle collider overlays  | F10                 |
 | Toggle info panel         | F11                 |
 
