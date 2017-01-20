@@ -142,7 +142,7 @@ proc init*(rock: Rock, size: range[0..2] = 0, pos: Coord = (0.0, 0.0)) =
   # set speed
   let spd = RockVel[size] / 2
   rock.vel = (random(spd) + spd, random(spd) + spd)
-  rock.rotVel = random([-1.0, 1.0]) * random(RockRotVel / 2) + RockRotVel / 2
+  rock.rotVel = randomSign().float * random(RockRotVel / 2) + RockRotVel / 2
 
 
 proc newRock*(size: range[0..2] = 0, pos: Coord = (0.0, 0.0)): Rock =
