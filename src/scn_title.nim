@@ -58,7 +58,7 @@ proc init*(scn: ScnTitle) =
                       "______________________",
                       "",
                       "press any key to start"]
-  titleTextG.align = center
+  titleTextG.align = TextAlign.center
   titleText.graphic = titleTextG
   titleText.centrify()
   titleText.center.y = 0
