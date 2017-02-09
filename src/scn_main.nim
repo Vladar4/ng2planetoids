@@ -241,7 +241,7 @@ method update*(scn: ScnMain, elapsed: float) =
   if scn.ship.dead:
     if lives > 0:
       # Respawn
-      if Button.left.pressed and respawnCooldown <= 0:
+      if MouseButton.left.pressed and respawnCooldown <= 0:
         dec lives
         scn.ship.dead = false
         scn.ship.reset()
@@ -259,7 +259,7 @@ method update*(scn: ScnMain, elapsed: float) =
   # Ship is alive
   else:
     # Shooting
-    if Button.left.pressed and scn.cooldown == 0:
+    if MouseButton.left.pressed and scn.cooldown == 0:
       let shot = newShot(scn.ship.pos, scn.ship.rot)
       scn.add(shot)
       scn.cooldown = Cooldown
