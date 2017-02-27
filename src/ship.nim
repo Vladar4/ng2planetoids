@@ -92,7 +92,7 @@ method update*(ship: Ship, elapsed: float) =
   ship.rot = direction(ship.pos, (mouse.abs / game.scale))
 
   # acceleration
-  if MouseButton.right.pressed:
+  if MouseButton.right.down:
     ship.acc = rotate(Acceleration, ship.rot)
     ship.engines = true
   else:

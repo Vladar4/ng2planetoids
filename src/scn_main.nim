@@ -129,8 +129,9 @@ method event*(scn: ScnMain, event: Event) =
       of ScancodeEscape:
         game.scene = titleScene
       of ScancodeP: # pause/unpause
-        gamePaused = not gamePaused
-        scn.pause.visible = gamePaused
+        if scn.input notin scn:
+          gamePaused = not gamePaused
+          scn.pause.visible = gamePaused
       of ScancodeF10: # toggle outlines
         colliderOutline = not colliderOutline
       of ScancodeF11: # toggle info
@@ -241,7 +242,7 @@ method update*(scn: ScnMain, elapsed: float) =
   if scn.ship.dead:
     if lives > 0:
       # Respawn
-      if MouseButton.left.pressed and respawnCooldown <= 0:
+      if MouseButton.left.down and respawnCooldown <= 0:
         dec lives
         scn.ship.dead = false
         scn.ship.reset()
@@ -259,7 +260,7 @@ method update*(scn: ScnMain, elapsed: float) =
   # Ship is alive
   else:
     # Shooting
-    if MouseButton.left.pressed and scn.cooldown == 0:
+    if MouseButton.left.down and scn.cooldown == 0:
       let shot = newShot(scn.ship.pos, scn.ship.rot)
       scn.add(shot)
       scn.cooldown = Cooldown
