@@ -54,6 +54,7 @@ proc reset*(ship: Ship) =
   ship.pos.y = game.size.h / 2 / game.scale.y
   ship.vel = (0.0, 0.0)
   ship.acc = (0.0, 0.0)
+  ship.dead = false
 
 
 proc init*(ship: Ship) =

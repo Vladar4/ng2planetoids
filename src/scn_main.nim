@@ -31,6 +31,7 @@ import
     nimgame,
     scene,
     settings,
+    textfield,
     textgraphic,
     types,
     utils],
@@ -39,7 +40,7 @@ import
 
 type
   ScnMain* = ref object of Scene
-    crash, status, input, pause: Entity
+    crash, status, inputLabel, inputText, pause: Entity
     ship: Ship
     cooldown: float # shooting cooldown (in seconds)
 
@@ -53,15 +54,18 @@ const
 
 var
   hiscoreIdx: int
+  defaultFont: Font
 
 
 proc init*(scn: ScnMain) =
   Scene(scn).init()
 
+  defaultFont = fntData["default8x16"]
+
   # info
   let
     info = newEntity()
-    infoText = newTextGraphic(fntData["default8x16"])
+    infoText = newTextGraphic(defaultFont)
   infoText.lines = ["Nimgame 2 Planetoids v1.0"]
   info.graphic = infoText
   info.scale = 0.5
@@ -70,7 +74,7 @@ proc init*(scn: ScnMain) =
 
   # status
   let
-    statusText = newTextGraphic(fntData["default8x16"])
+    statusText = newTextGraphic(defaultFont)
   scn.status = newEntity()
   scn.status.graphic = statusText
   scn.status.pos = (8 / game.scale.x, 8 / game.scale.y)
@@ -78,18 +82,26 @@ proc init*(scn: ScnMain) =
 
   # input
   let
-    inputText = newTextGraphic(fntData["default8x16"])
-  scn.input = newEntity()
-  scn.input.graphic = inputText
-  inputText.lines = ["ENTER YOUR NAME", ""]
-  scn.input.centrify()
-  scn.input.pos = (game.size.w / 2 / game.scale.x,
-                   game.size.h / 2 / game.scale.y)
-  scn.input.layer = LayerGUI
+    iLbl = newTextGraphic(defaultFont)
+    iTxt = newTextField(defaultFont)
+  scn.inputLabel = newEntity()
+  scn.inputText = newEntity()
+  scn.inputLabel.graphic = iLbl
+  scn.inputText.graphic = iTxt
+  iLbl.lines = ["ENTER YOUR NAME"]
+  iTxt.limit = 32
+  scn.inputLabel.centrify()
+  scn.inputText.centrify()
+  scn.inputLabel.pos = (game.size.w / 2 / game.scale.x,
+                        game.size.h / 2 / game.scale.y)
+  scn.inputText.pos =  (game.size.w / 2 / game.scale.x,
+                        (game.size.h / 2) / game.scale.y + defaultFont.charH.float)
+  scn.inputLabel.layer = LayerGUI
+  scn.inputText.layer = LayerGUI
 
   # pause
   let
-    pauseText = newTextGraphic(fntData["default8x16"])
+    pauseText = newTextGraphic(defaultFont)
   scn.pause = newEntity()
   scn.pause.graphic = pauseText
   pauseText.lines = ["PAUSE"]
@@ -125,18 +137,49 @@ proc newScnMain*(): ScnMain =
 
 method event*(scn: ScnMain, event: Event) =
   if event.kind == KeyDown:
-    case event.key.keysym.scancode:
-      of ScancodeEscape:
-        game.scene = titleScene
-      of ScancodeP: # pause/unpause
-        if scn.input notin scn:
-          gamePaused = not gamePaused
-          scn.pause.visible = gamePaused
-      of ScancodeF10: # toggle outlines
-        colliderOutline = not colliderOutline
-      of ScancodeF11: # toggle info
-        showInfo = not showInfo
+    # Entering name
+    if scn.inputText in scn:
+      let tf = TextField(scn.inputText.graphic)
+
+      case event.key.keysym.scancode:
+      of ScancodeBackspace:
+        tf.bs()
+        scn.inputText.centrify()
+      of ScancodeDelete:
+        tf.del()
+        scn.inputText.centrify()
+      of ScancodeLeft:
+        tf.left()
+      of ScancodeRight:
+        tf.right()
+      of ScancodeHome:
+        tf.toFirst()
+      of ScancodeEnd:
+        tf.toLast()
+      of ScancodeReturn:
+        tf.deactivate()
       else: discard
+
+    else:
+
+      case event.key.keysym.scancode:
+        of ScancodeEscape:
+          game.scene = titleScene
+        of ScancodeP: # pause/unpause
+          if scn.inputLabel notin scn:
+            gamePaused = not gamePaused
+            scn.pause.visible = gamePaused
+        of ScancodeF10: # toggle outlines
+          colliderOutline = not colliderOutline
+        of ScancodeF11: # toggle info
+          showInfo = not showInfo
+        else: discard
+
+  elif event.kind == TextInput:
+    # Entering name
+    if scn.inputText in scn:
+      TextField(scn.inputText.graphic).add($event.text.text)
+      scn.inputText.centrify()
 
 
 method show*(scn: ScnMain) =
@@ -155,41 +198,17 @@ method update*(scn: ScnMain, elapsed: float) =
   scn.updateScene(elapsed)
 
   # Entering name
-  if scn.input in scn:
-    let text = TextGraphic(scn.input.graphic)
-    # Input
-    if text.lines[1].len < 32:
-      # Letters
-      for key in ScancodeA..ScancodeZ:
-        if key.pressed:
-          clearPressed(key)
-          var lines = text.lines
-          lines[1].add($chr(ord('A') + (key.int - ScancodeA.int)))
-          text.lines = lines
-          text.update()
-      # Numbers
-      for key in Scancode1..Scancode0:
-        if key.pressed:
-          clearPressed(key)
-          var lines = text.lines
-          lines[1].add($chr(ord('1') + (key.int - Scancode1.int)))
-          text.lines = lines
-          text.update()
-    # Controls
-    if ScancodeBackspace.pressed:
-      clearPressed(ScancodeBackspace)
-      var lines = text.lines
-      lines[1] = lines[1][0..^2]
-      text.lines = lines
-      text.update()
-
-    if ScancodeReturn.pressed:
-      clearPressed(ScancodeReturn)
-      discard scn.del(scn.input)
-      hiscores[hiscoreIdx].name = text.lines[1].toName
+  if scn.inputText in scn:
+    let tf = TextField(scn.inputText.graphic)
+    if not tf.isActive:
+      hiscores[hiscoreIdx].name = tf.text.toName
       hiscores[hiscoreIdx].score = score.uint
       writeHiscores()
+      discard scn.del(scn.inputLabel)
+      discard scn.del(scn.inputText)
       game.scene = titleScene
+      scn.ship.reset()
+      scn.add(scn.ship)
     return
 
   # Shooting cooldown
@@ -252,7 +271,9 @@ method update*(scn: ScnMain, elapsed: float) =
     else:
       hiscoreIdx = checkForHiscore(uint(score))
       if hiscoreIdx >= 0:
-        scn.add(scn.input)
+        scn.add(scn.inputLabel)
+        scn.add(scn.inputText)
+        TextField(scn.inputText.graphic).activate()
         return
 
       game.scene = titleScene
