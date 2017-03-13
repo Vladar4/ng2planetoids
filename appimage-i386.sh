@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Configured for Ubuntu 12.04.5 LTS
+# Configured for Ubuntu 12.04.5 LTS (i386)
 
 NAME="Nimgame 2 Planetoids"
 PROJ="ng2planetoids"
@@ -37,11 +37,11 @@ Name=$NAME
 Exec=$PROJ
 Icon=$PROJ" > "$PROJ.desktop"
 
-wget -O AppRun https://github.com/probonopd/AppImageKit/releases/download/continuous/AppRun-i686
-chmod a+x AppRun
+wget -O AppRun https://github.com/probonopd/AppImageKit/releases/download/8/AppRun-i686
+chmod +x AppRun
 
 cd ..
-wget -N https://github.com/probonopd/AppImageKit/releases/download/continuous/appimagetool-i686.AppImage
-chmod a+x appimagetool-i686.AppImage
+wget -N https://github.com/probonopd/AppImageKit/releases/download/8/appimagetool-i686.AppImage
+chmod +x appimagetool-i686.AppImage
 ./appimagetool-i686.AppImage "$PROJ.AppDir" "$PROJ-$ARCH.run"
 

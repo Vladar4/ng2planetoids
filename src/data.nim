@@ -35,8 +35,6 @@ import
 const
   NameLimit = 32
   RespawnCooldown* = 1.0
-  HiscoresDir = getConfigDir().joinPath("ng2planetoids")
-  HiscoresPath = HiscoresDir.joinPath("hiscores.dat")
 
 
 type
@@ -90,6 +88,10 @@ proc toString*(name: Name): string =
     result.add(c)
 
 
+var
+  hiscoresDir, hiscoresPath: string
+
+
 proc initHiscores*() =
   var
     f: File
@@ -97,7 +99,10 @@ proc initHiscores*() =
   let
     size = sizeof(line)
 
-  if f.open(HiscoresPath, fmRead, size):
+  hiscoresDir = getConfigDir().joinPath("ng2planetoids")
+  hiscoresPath = hiscoresDir.joinPath("hiscores.dat")
+
+  if f.open(hiscoresPath, fmRead, size):
     # Read existing hiscores
     var i = 0
     while f.readBuffer(addr(line), size) == size:
@@ -105,9 +110,9 @@ proc initHiscores*() =
       inc i
 
   else:
-    discard existsOrCreateDir(HiscoresDir)
+    discard existsOrCreateDir(hiscoresDir)
     # Fill a new hiscores file
-    if not f.open(HiscoresPath, fmWrite, size):
+    if not f.open(hiscoresPath, fmWrite, size):
       echo "ERROR: can't create hiscores.dat"
       return
     for i in 0..9:
@@ -125,7 +130,7 @@ proc writeHiscores*() =
   let
     size = sizeof(line)
 
-  discard f.open(HiscoresPath, fmWrite, size)
+  discard f.open(hiscoresPath, fmWrite, size)
   for i in 0..9:
     line = hiscores[i]
     discard f.writeBuffer(addr(line), size)
