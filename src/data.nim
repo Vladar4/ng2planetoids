@@ -22,6 +22,7 @@
 # Vladar vladar4@gmail.com
 
 import
+  os,
   nimgame2 / [
     assets,
     audio,
@@ -34,6 +35,8 @@ import
 const
   NameLimit = 32
   RespawnCooldown* = 1.0
+  HiscoresDir = getConfigDir().joinPath("ng2planetoids")
+  HiscoresPath = HiscoresDir.joinPath("hiscores.dat")
 
 
 type
@@ -94,7 +97,7 @@ proc initHiscores*() =
   let
     size = sizeof(line)
 
-  if f.open("hiscores.dat", fmRead, size):
+  if f.open(HiscoresPath, fmRead, size):
     # Read existing hiscores
     var i = 0
     while f.readBuffer(addr(line), size) == size:
@@ -102,8 +105,11 @@ proc initHiscores*() =
       inc i
 
   else:
+    discard existsOrCreateDir(HiscoresDir)
     # Fill a new hiscores file
-    discard f.open("hiscores.dat", fmWrite, size)
+    if not f.open(HiscoresPath, fmWrite, size):
+      echo "ERROR: can't create hiscores.dat"
+      return
     for i in 0..9:
       line.name = toName("none")
       line.score = 0
@@ -119,7 +125,7 @@ proc writeHiscores*() =
   let
     size = sizeof(line)
 
-  discard f.open("hiscores.dat", fmWrite, size)
+  discard f.open(HiscoresPath, fmWrite, size)
   for i in 0..9:
     line = hiscores[i]
     discard f.writeBuffer(addr(line), size)
