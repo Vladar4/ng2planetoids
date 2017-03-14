@@ -43,5 +43,5 @@ chmod +x AppRun
 cd ..
 wget -N https://github.com/probonopd/AppImageKit/releases/download/8/appimagetool-i686.AppImage
 chmod +x appimagetool-i686.AppImage
-./appimagetool-i686.AppImage "$PROJ.AppDir" "$PROJ-$ARCH.run"
+./appimagetool-i686.AppImage "$PROJ.AppDir" "$PROJ-$ARCH.AppImage"
 
