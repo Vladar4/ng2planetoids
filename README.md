@@ -18,11 +18,7 @@ Controls:
 Links:
 ------
 
-[Compiled win32 version](ng2planetoids-win32.zip)
-
-[AppImage for Linux i386](ng2planetoids-i386.run)
-
-[AppImage for Linux x86_64](ng2planetoids-x86_64.run)
+[v1.0 release (binaries)](https://github.com/Vladar4/ng2planetoids/releases/tag/v1.0)
 
 --------
 
