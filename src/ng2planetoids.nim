@@ -25,14 +25,19 @@ import
   nimgame2 / [
     input,
     nimgame,
-    settings],
+    settings,
+    types],
   data, scn_title, scn_main
 
 
 game = newGame()
-if game.init(w = 1280, h = 720, title = "Nimgame 2 Planetoids"):
+if game.init(w = 640, h = 360,
+             title = "Nimgame 2 Planetoids",
+             icon = "data/ng2planetoids.png"):
   loadData()
-  game.scale = 2.0
+  game.windowSize = game.size * 2
+  game.setResizable(true)
+  game.centrify()
   titleScene = newScnTitle()
   mainScene = newScnMain()
   game.scene = titleScene

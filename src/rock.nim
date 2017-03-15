@@ -93,7 +93,7 @@ proc init*(rock: Rock, size: range[0..2] = 0, pos: Coord = (0.0, 0.0)) =
 
   # get game window size once
   if gameSize == (0.0, 0.0):
-    gameSize = game.size.Coord / game.scale
+    gameSize = game.size.Coord
 
   rock.tags.add("rock")
   rock.size = size
@@ -120,8 +120,7 @@ proc init*(rock: Rock, size: range[0..2] = 0, pos: Coord = (0.0, 0.0)) =
 
   # set position
   if pos == (0.0, 0.0):
-    let dim: Coord = (game.size.w div game.scale.x.int,
-                      game.size.h div game.scale.y.int)
+    let dim: Coord = game.size
     case random(4):
     of 0: # left side
       rock.pos.x = 50

@@ -62,16 +62,16 @@ proc init*(scn: ScnTitle) =
   titleText.graphic = titleTextG
   titleText.centrify()
   titleText.center.y = 0
-  titleText.pos = (game.size.w / 2 / game.scale.x, 32 / game.scale.y)
+  titleText.pos = (game.size.w / 2, 16.0)
 
-  infoTextG.lines = ["Nimgame 2 Planetoids v1.0"]
+  infoTextG.lines = ["Nimgame 2 Planetoids v1.01"]
   infoText.graphic = infoTextG
   infoText.scale = 0.5
-  infoText.pos = (8 / game.scale.x, (game.size.h.float - 20) / game.scale.y)
+  infoText.pos = (8.0, game.size.h.float - 20.0)
 
   scn.scoreboard = newEntity()
   scn.scoreboard.graphic = scoreG
-  scn.scoreboard.pos = (game.size.w / 2 / game.scale.x, 400.0 / game.scale.y)
+  scn.scoreboard.pos = (game.size.w / 2, 200.0)
 
   # add to scene
   scn.add(titleText)

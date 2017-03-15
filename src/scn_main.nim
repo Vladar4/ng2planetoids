@@ -66,10 +66,10 @@ proc init*(scn: ScnMain) =
   let
     info = newEntity()
     infoText = newTextGraphic(defaultFont)
-  infoText.lines = ["Nimgame 2 Planetoids v1.0"]
+  infoText.lines = ["Nimgame 2 Planetoids v1.01"]
   info.graphic = infoText
   info.scale = 0.5
-  info.pos = (8 / game.scale.x, (game.size.h.float - 20) / game.scale.y)
+  info.pos = (4.0, game.size.h.float - 10.0)
   info.layer = LayerGUI
 
   # status
@@ -77,7 +77,7 @@ proc init*(scn: ScnMain) =
     statusText = newTextGraphic(defaultFont)
   scn.status = newEntity()
   scn.status.graphic = statusText
-  scn.status.pos = (8 / game.scale.x, 8 / game.scale.y)
+  scn.status.pos = (4.0, 4.0)
   scn.status.layer = LayerGUI
 
   # input
@@ -92,10 +92,10 @@ proc init*(scn: ScnMain) =
   iTxt.limit = 32
   scn.inputLabel.centrify()
   scn.inputText.centrify()
-  scn.inputLabel.pos = (game.size.w / 2 / game.scale.x,
-                        game.size.h / 2 / game.scale.y)
-  scn.inputText.pos =  (game.size.w / 2 / game.scale.x,
-                        (game.size.h / 2) / game.scale.y + defaultFont.charH.float)
+  scn.inputLabel.pos = (game.size.w / 2,
+                        game.size.h / 2)
+  scn.inputText.pos =  (game.size.w / 2,
+                        game.size.h / 2 + defaultFont.charH.float)
   scn.inputLabel.layer = LayerGUI
   scn.inputText.layer = LayerGUI
 
@@ -106,8 +106,8 @@ proc init*(scn: ScnMain) =
   scn.pause.graphic = pauseText
   pauseText.lines = ["PAUSE"]
   scn.pause.centrify()
-  scn.pause.pos = (game.size.w / 2 / game.scale.x,
-                   game.size.h / 2 / game.scale.y)
+  scn.pause.pos = (game.size.w / 2,
+                   game.size.h / 2)
   scn.pause.layer = LayerGUI
   scn.pause.visible = false
 

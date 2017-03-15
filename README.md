@@ -18,7 +18,7 @@ Controls:
 Links:
 ------
 
-[v1.0 release (binaries)](https://github.com/Vladar4/ng2planetoids/releases/tag/v1.0)
+[v1.01 release (binaries)](https://github.com/Vladar4/ng2planetoids/releases/tag/v1.01)
 
 --------
 

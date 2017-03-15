@@ -77,9 +77,9 @@ method update*(shot: Shot, elapsed: float) =
   shot.updateEntity(elapsed)
   # check screen limits
   if shot.pos.x < - ShotRad or
-     shot.pos.x > game.size.w.float / game.scale.x + ShotRad or
+     shot.pos.x > game.size.w.float + ShotRad or
      shot.pos.y < - ShotRad or
-     shot.pos.y > game.size.h.float / game.scale.y + ShotRad:
+     shot.pos.y > game.size.h.float + ShotRad:
     shot.dead = true
 
 

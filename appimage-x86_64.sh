@@ -24,7 +24,7 @@ rm -rf "$PROJ.AppDir"
 mkdir -p "$PROJ.AppDir/usr/bin"
 mkdir -p "$PROJ.AppDir/usr/lib"
 cp "$PROJ" "$PROJ.AppDir/usr/bin"
-cp "$PROJ".png "$PROJ.AppDir"
+cp "$DATA/$PROJ".png "$PROJ.AppDir"
 
 cp -R "$DATA" "$PROJ.AppDir/usr"
 cd "$PROJ.AppDir"

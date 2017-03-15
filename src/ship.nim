@@ -50,8 +50,8 @@ const
 
 proc reset*(ship: Ship) =
   # reset ship's position to the center of the screen
-  ship.pos.x = game.size.w / 2 / game.scale.x
-  ship.pos.y = game.size.h / 2 / game.scale.y
+  ship.pos.x = game.size.w / 2
+  ship.pos.y = game.size.h / 2
   ship.vel = (0.0, 0.0)
   ship.acc = (0.0, 0.0)
   ship.dead = false
@@ -83,14 +83,14 @@ method render*(ship: Ship) =
       var line = [
         rotate(ln[0], ship.pos, ship.rot),
         rotate(ln[1], ship.pos, ship.rot)]
-      discard thickLine(line[0], line[1], game.scale.x, 0xFF0000FF'u32)
+      discard thickLine(line[0], line[1], 2, 0xFF0000FF'u32)
 
 
 method update*(ship: Ship, elapsed: float) =
   ship.updateEntity(elapsed)
 
   # rotation
-  ship.rot = direction(ship.pos, (mouse.abs / game.scale))
+  ship.rot = direction(ship.pos, mouse.abs / game.scale)
 
   # acceleration
   if MouseButton.right.down:
@@ -105,7 +105,7 @@ method update*(physics: Physics, ship: Ship, elapsed: float) =
   physics.updatePhysics(ship, elapsed)
 
   let
-    gameDim: Coord = game.size.Coord / game.scale
+    gameDim: Coord = game.size.Coord
     shipDim: Coord = TextureGraphic(ship.graphic).dim / 2
 
   # X limits
