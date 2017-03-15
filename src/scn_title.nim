@@ -62,12 +62,12 @@ proc init*(scn: ScnTitle) =
   titleText.graphic = titleTextG
   titleText.centrify()
   titleText.center.y = 0
-  titleText.pos = (game.size.w / 2, 16.0)
+  titleText.pos = (game.size.w / 2, 8.0)
 
   infoTextG.lines = ["Nimgame 2 Planetoids v1.01"]
   infoText.graphic = infoTextG
   infoText.scale = 0.5
-  infoText.pos = (8.0, game.size.h.float - 20.0)
+  infoText.pos = (4.0, game.size.h.float - 10.0)
 
   scn.scoreboard = newEntity()
   scn.scoreboard.graphic = scoreG
