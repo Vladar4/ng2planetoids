@@ -61,7 +61,7 @@ proc init*(ship: Ship) =
   ship.initEntity()
   ship.tags.add("ship")
   ship.graphic = gfxData["ship"]
-  ship.physics = new Physics
+  ship.physics = defaultPhysics
   ship.drg = Drag
   ship.centrify()
   ship.collider = ship.newPolyCollider(
@@ -99,10 +99,6 @@ method update*(ship: Ship, elapsed: float) =
   else:
     ship.engines = false
     ship.acc = (0.0, 0.0)
-
-
-method update*(physics: Physics, ship: Ship, elapsed: float) =
-  physics.updatePhysics(ship, elapsed)
 
   let
     gameDim: Coord = game.size.Coord

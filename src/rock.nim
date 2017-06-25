@@ -116,7 +116,7 @@ proc init*(rock: Rock, size: range[0..2] = 0, pos: Coord = (0.0, 0.0)) =
 
   rock.collider = newPolyCollider(rock, (0, 0), RockGraphic(rock.graphic).poly)
   rock.collider.tags.add("nil") # do not check collisions "rock - target"
-  rock.physics = new Physics
+  rock.physics = defaultPhysics
 
   # set position
   if pos == (0.0, 0.0):
@@ -163,10 +163,6 @@ method update*(rock: Rock, elapsed: float) =
     rock.pos.y = gameSize.y + rock.dim.y
   elif rock.pos.y > gameSize.y + rock.dim.y:
     rock.pos.y = -rock.dim.y
-
-
-method update*(physics: Physics, rock: Rock, elapsed: float) =
-  physics.updatePhysics(rock, elapsed)
 
 
 proc shatter*(rock: Rock, angle: Angle) =

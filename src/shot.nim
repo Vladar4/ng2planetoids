@@ -60,7 +60,7 @@ proc init*(shot: Shot, pos: Coord, angle: Angle) =
   shot.initEntity()
   shot.tags.add("shot")
   shot.graphic = newProcGraphic()
-  shot.physics = new Physics
+  shot.physics = defaultPhysics
   shot.collider = shot.newCircleCollider((0, 0), ShotRad)
   shot.collider.tags.add("rock") # check collisions "shot - rock" only
   ProcGraphic(shot.graphic).procedure = drawShot
@@ -81,10 +81,6 @@ method update*(shot: Shot, elapsed: float) =
      shot.pos.y < - ShotRad or
      shot.pos.y > game.size.h.float + ShotRad:
     shot.dead = true
-
-
-method update*(physics: Physics, shot: Shot, elapsed: float) =
-  physics.updatePhysics(shot, elapsed)
 
 
 method onCollide*(shot: Shot, target: Entity) =
