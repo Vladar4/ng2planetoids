@@ -27,7 +27,6 @@ import
   nimgame2 / [
     assets,
     audio,
-    collider,
     draw,
     entity,
     nimgame,

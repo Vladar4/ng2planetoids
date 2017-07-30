@@ -24,7 +24,6 @@
 import
   nimgame2 / [
     assets,
-    collider,
     draw,
     entity,
     nimgame,
