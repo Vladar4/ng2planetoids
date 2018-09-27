@@ -72,7 +72,7 @@ proc drawRock*(graphic: ProcGraphic,
                flip: Flip,
                region: Rect) =
   let rock = RockGraphic(graphic)
-  if rock.poly == nil:
+  if rock.poly.len < 1:
     return
   # modify points
   var coords: seq[Coord] = @[]
