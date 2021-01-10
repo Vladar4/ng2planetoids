@@ -34,7 +34,7 @@ import
     textfield,
     textgraphic,
     types,
-    utils],
+    ],
   data, rock, ship, shot
 
 
@@ -58,7 +58,7 @@ var
 
 
 proc init*(scn: ScnMain) =
-  Scene(scn).init()
+  Scene(scn).initScene()
 
   defaultFont = fntData["default8x16"]
 

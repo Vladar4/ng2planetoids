@@ -22,7 +22,7 @@
 # Vladar vladar4@gmail.com
 
 import
-  math, random,
+  math,
   sdl2/sdl,
   nimgame2 / [
     assets,
@@ -31,7 +31,6 @@ import
     entity,
     nimgame,
     procgraphic,
-    texturegraphic,
     types,
     utils
   ],
@@ -108,9 +107,9 @@ proc init*(rock: Rock, size: range[0..2] = 0, pos: Coord = (0.0, 0.0)) =
       a = 2 * Pi * i.float / RockPolyDotCount[size].float
     var
       x = radius * cos(a) +
-        random(RockPolyRandom[size]) - RockPolyRandom[size] / 2
+        rand(RockPolyRandom[size]) - RockPolyRandom[size] / 2
       y = radius * sin(a) +
-        random(RockPolyRandom[size]) - RockPolyRandom[size] / 2
+        rand(RockPolyRandom[size]) - RockPolyRandom[size] / 2
     RockGraphic(rock.graphic).poly.add((x, y))
 
   rock.collider = newPolyCollider(rock, (0, 0), RockGraphic(rock.graphic).poly)
@@ -120,18 +119,18 @@ proc init*(rock: Rock, size: range[0..2] = 0, pos: Coord = (0.0, 0.0)) =
   # set position
   if pos == (0.0, 0.0):
     let dim: Coord = game.size
-    case random(4):
+    case rand(4):
     of 0: # left side
       rock.pos.x = 50
-      rock.pos.y = random(dim.y - 100) + 50
+      rock.pos.y = rand(dim.y - 100) + 50
     of 1: # right side
       rock.pos.x = dim.x - 50
-      rock.pos.y = random(dim.y - 100) + 50
+      rock.pos.y = rand(dim.y - 100) + 50
     of 2: # top side
-      rock.pos.x = random(dim.x - 100) + 50
+      rock.pos.x = rand(dim.x - 100) + 50
       rock.pos.y = 50
     of 3: # bottom side
-      rock.pos.x = random(dim.x - 100) + 50
+      rock.pos.x = rand(dim.x - 100) + 50
       rock.pos.y = dim.y - 50
     else: discard
   else:
@@ -139,8 +138,8 @@ proc init*(rock: Rock, size: range[0..2] = 0, pos: Coord = (0.0, 0.0)) =
 
   # set speed
   let spd = RockVel[size] / 2
-  rock.vel = (random(spd) + spd, random(spd) + spd)
-  rock.rotVel = randomSign().float * random(RockRotVel / 2) + RockRotVel / 2
+  rock.vel = (rand(spd) + spd, rand(spd) + spd)
+  rock.rotVel = randomSign().float * rand(RockRotVel / 2) + RockRotVel / 2
 
 
 proc newRock*(size: range[0..2] = 0, pos: Coord = (0.0, 0.0)): Rock =
@@ -172,17 +171,17 @@ proc shatter*(rock: Rock, angle: Angle) =
   case rock.size:
   of 0:
     let rockA = newRock(1, rock.pos)
-    rocka.vel = rotate((0.0, RockVel[1]), angle - random(45.0) - 45.0)
+    rocka.vel = rotate((0.0, RockVel[1]), angle - rand(45.0) - 45.0)
     rock.newRocks.add(rockA)
     let rockB = newRock(1, rock.pos)
-    rockB.vel = rotate((0.0, RockVel[1]), angle + random(45.0) + 45.0)
+    rockB.vel = rotate((0.0, RockVel[1]), angle + rand(45.0) + 45.0)
     rock.newRocks.add(rockB)
   of 1:
     let rockA = newRock(2, rock.pos)
-    rockA.vel = rotate((0.0, RockVel[2]), angle - random(45.0) - 45.0)
+    rockA.vel = rotate((0.0, RockVel[2]), angle - rand(45.0) - 45.0)
     rock.newRocks.add(rockA)
     let rockB = newRock(2, rock.pos)
-    rockB.vel = rotate((0.0, RockVel[2]), angle + random(45.0) + 45.0)
+    rockB.vel = rotate((0.0, RockVel[2]), angle + rand(45.0) + 45.0)
     rock.newRocks.add(rockB)
   of 2:
     discard

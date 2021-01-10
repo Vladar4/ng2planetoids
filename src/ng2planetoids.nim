@@ -23,9 +23,7 @@
 
 import
   nimgame2 / [
-    input,
     nimgame,
-    settings,
     types],
   data, scn_title, scn_main
 

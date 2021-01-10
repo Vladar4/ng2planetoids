@@ -25,15 +25,13 @@ import
   nimgame2 / [
     assets,
     entity,
-    font,
-    graphic,
     input,
     nimgame,
     scene,
     settings,
     textgraphic,
     types],
-  data, scn_main
+  data
 
 
 type
@@ -46,7 +44,7 @@ proc free*(scn: ScnTitle) =
 
 
 proc init*(scn: ScnTitle) =
-  Scene(scn).init()
+  Scene(scn).initScene()
   let
     titleText = newEntity()
     titleTextG = newTextGraphic(fntData["default8x16"])
