@@ -58,7 +58,7 @@ var
 
 
 proc init*(scn: ScnMain) =
-  Scene(scn).initScene()
+  Scene(scn).init()
 
   defaultFont = fntData["default8x16"]
 

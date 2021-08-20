@@ -44,7 +44,7 @@ proc free*(scn: ScnTitle) =
 
 
 proc init*(scn: ScnTitle) =
-  Scene(scn).initScene()
+  Scene(scn).init()
   let
     titleText = newEntity()
     titleTextG = newTextGraphic(fntData["default8x16"])
